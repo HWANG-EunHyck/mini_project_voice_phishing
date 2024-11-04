@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>예측 결과</title>
+</head>
+<body>
+    <h1>예측 결과</h1>
+    {% if predicted_class is not none %}
+        <p>예측 클래스: {{ predicted_class }}</p>
+    {% endif %}
+    {% if recognized_text is not none %}
+        <p>인식된 텍스트: {{ recognized_text }}</p>
+    {% endif %}
+    <a href="/">다시 시도하기</a>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>음성 인식 및 텍스트 변환</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;  
+            justify-content: center;  
+            height: 100vh; 
+            margin: 0; 
+            font-family: Arial, sans-serif;  
+        }
+        #predict-form, #result, #upload-form {
+            text-align: center;  
+            margin: 10px 0;  
+        }
+        button {
+            padding: 10px 20px;  
+            font-size: 16px;  
+            cursor: pointer;  
+        }
+    </style>
+</head>
+<body>
+    <h1>음성 인식 및 텍스트 변환</h1>
+
+    <br><br><br>
+
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" id="file-input" name="file" accept=".mp3" required>
+        <button type="button" onclick="submitFileForm()">음성 파일 업로드</button>
+    </form>
+
+
+    <br><br><br>
+
+
+    <!-- 예측하기 위한 텍스트 입력 폼 -->
+    <form id="predict-form">
+        <textarea id="input-text" rows="4" cols="50" placeholder="텍스트를 입력하세요..."></textarea><br>
+        <button type="button" onclick="submitTextForm()">예측하기</button>
+    </form>
+
+    <br><br><br>
+
+    <!-- 음성 파일 업로드 폼 -->
+    <script>
+        async function submitTextForm() {
+            const text = document.getElementById('input-text').value;
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text: text }),
+            });
+            const data = await response.json();
+            document.getElementById('result').innerHTML = `예측 클래스: ${data.predicted_class}`;
+        }
+
+        async function submitFileForm() {
+            const formData = new FormData(document.getElementById('upload-form'));
+            const response = await fetch('/stt', {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await response.json();
+            document.getElementById('result').innerHTML = `인식된 텍스트: ${data.text || data.error}`;
+        }
+    </script>
+
+    <div id="result"></div>
+</body>
+</html>
+
+
